@@ -1,0 +1,61 @@
+---
+title: "Reprex code for odd NSE issues with testthat"
+output:
+  md_document:
+    variant: markdown_github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+I recently have been running into an issue while developing the package [taxa](https://github.com/ropensci/taxa). 
+I am getting an error during tests, but not when running the same code from the console. 
+After many failed efforts and much sorrow, I created a simple package called `bugtest` to function as a reprex and discovered some very strange behavior regarding `devtools::test()`.
+This issue report is the output of an Rmd file in the package source here:
+
+https://github.com/zachary-foster/bugtest
+
+
+```{r}
+library(bugtest)
+```
+
+`func_b` should look for data named `func_a`, which also happens to be the name of an exported function for the package, but is not the desired target for NSE.
+Here is the code for `func_b`:
+
+```{r echo = FALSE, comment=""}
+func_b
+```
+
+And here is `func_a`:
+
+```{r echo = FALSE, comment=""}
+func_a
+```
+
+This seems to work as desired, and detect the `func_a` data in the `my_data` list given to the `data` option of `lazyeval` instead of the function `func_a`.  
+
+```{r}
+print(func_b(func_a))
+```
+
+However, it fails during testing, where the exact same code is run:
+
+```{r}
+devtools::test()
+```
+
+Here is the contents of the test file:
+
+```{r echo = FALSE, comment=""}
+cat(readChar("tests/testthat/test.R", nchars = 100000))
+```
+
+The real weirdness is that after running the tests, running the same code again from the console causes the same bug as when it was run in the tests:
+
+```{r}
+print(func_b(func_a))
+```
+
+Therefore, running `devtools::test()` from the console is somehow altering the global environment or in some other way changing how NSE is working.
