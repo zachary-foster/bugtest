@@ -1,4 +1,6 @@
-I recently have been running into an issue while developing the package [taxa](https://github.com/ropensci/taxa). I am getting an error during tests, but not when running the same code from the console. After many failed efforts and much sorrow, I created a simple package called `bugtest` to function as a reprex and discovered some very strange behavior regarding `devtools::test()`. This issue report is the output of an Rmd file in the package source, which I have attached to this issue.
+I recently have been running into an issue while developing the package [taxa](https://github.com/ropensci/taxa). I am getting an error during tests, but not when running the same code from the console. After many failed efforts and much sorrow, I created a simple package called `bugtest` to function as a reprex and discovered some very strange behavior regarding `devtools::test()`. This issue report is the output of an Rmd file in the package source here:
+
+<https://github.com/zachary-foster/bugtest>
 
 ``` r
 library(bugtest)
